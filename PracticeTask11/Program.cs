@@ -31,6 +31,28 @@ namespace PracticeTask11
             return Result;
         }
 
+        // Ввод сообщения из файла
+        static string FileInput()
+        {
+            // Переменная для работы с файлами
+            StreamReader InputFile;
+            // Результирующая строка
+            string Result;
+
+            try
+            {
+                InputFile = new StreamReader("input.dat");
+                Result = InputFile.ReadLine();
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("Файла \"input.dat\" не обнаружено, введите выражение вручную.");
+                Result = ConsoleInput();
+            }
+
+            return Result;
+        }
+
         // Шифровка сообщения
         static string EncryptMessage(string Input)
         {
@@ -60,10 +82,11 @@ namespace PracticeTask11
         static void Main(string[] args)
         {
             // Входное сообщение
-            string InputMessage;
+            string InputMessage = "";
             // Выходное сообщение
             string OutputMessage;
             // Переменная для работы с файлами
+            StreamWriter OutputFile;
             // Флаг правильности ввода
             bool ok = false;
 
@@ -113,11 +136,51 @@ namespace PracticeTask11
                     case (ConsoleKey.D1):
                     case (ConsoleKey.NumPad1):
                         OutputMessage = EncryptMessage(InputMessage);
+
+                        try
+                        {
+                            OutputFile = new StreamWriter("output.dat");
+                            OutputFile.WriteLine(OutputMessage);
+                            OutputFile.Close();
+                        }
+                        catch (FileNotFoundException e)
+                        {
+                            File.Create("output.dat");
+                            OutputFile = new StreamWriter("output.dat");
+                            OutputFile.WriteLine(OutputMessage);
+                            OutputFile.Close();
+                        }
+
+                        Console.WriteLine("Сообщение успешно зашифровано, результат записан в файл \"output.dat\". Исходное сообщение:");
+                        Console.WriteLine(InputMessage);
+                        Console.WriteLine("Зашифрованное сообщение:");
+                        Console.WriteLine(OutputMessage);
+
                         ok = true;
                         break;
                     case (ConsoleKey.D2):
                     case (ConsoleKey.NumPad2):
                         OutputMessage = DecryptMessage(InputMessage);
+
+                        try
+                        {
+                            OutputFile = new StreamWriter("output.dat");
+                            OutputFile.WriteLine(OutputMessage);
+                            OutputFile.Close();
+                        }
+                        catch (FileNotFoundException e)
+                        {
+                            File.Create("output.dat");
+                            OutputFile = new StreamWriter("output.dat");
+                            OutputFile.WriteLine(OutputMessage);
+                            OutputFile.Close();
+                        }
+
+                        Console.WriteLine("Сообщение успешно расшифровано, результат записан в файл \"output.dat\". Исходное сообщение:");
+                        Console.WriteLine(InputMessage);
+                        Console.WriteLine("Расшифрованное сообщение:");
+                        Console.WriteLine(OutputMessage);
+
                         ok = true;
                         break;
                 }
